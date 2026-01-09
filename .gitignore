@@ -1,0 +1,17 @@
+# ESPHome / build artifacts
+.esphome/
+.build/
+.pioenvs/
+.pio/
+.cache/
+
+# Firmware binaries (optional – uncomment if you ever export)
+# *.bin
+# *.elf
+
+# Logs
+*.log
+
+# OS noise
+.DS_Store
+Thumbs.db
