@@ -1076,9 +1076,9 @@ display:
           // Top status strip
           it.filled_rectangle(0, 0, 320, 28, Color(0, 0, 0));
           if (!isnan(id(avg_indoor_temp).state)) {
-            it.printf(8, 6, id(font_header), accent, TextAlign::TOP_LEFT, "Indoor Temperature %.0f°", id(avg_indoor_temp).state);
+            it.printf(8, 6, id(font_timer), accent, TextAlign::TOP_LEFT, "Indoor Temperature %.0f°", id(avg_indoor_temp).state);
           } else {
-            it.printf(8, 6, id(font_header), accent, TextAlign::TOP_LEFT, "Indoor Temperature --°");
+            it.printf(8, 6, id(font_timer), accent, TextAlign::TOP_LEFT, "Indoor Temperature --°");
           }
           id(draw_hvac_icon).execute();
 
