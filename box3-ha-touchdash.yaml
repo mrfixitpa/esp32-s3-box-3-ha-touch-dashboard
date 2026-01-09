@@ -40,8 +40,8 @@ esphome:
   name: box3-ha-touchdash
   friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   project:
-    name: esp32-s3-box-3-ha-touch-dashboard
-    version: "0.1.2"
+    name: mrfixitpa/esp32-s3-box-3-ha-touch-dashboard
+    version: 0.1.2
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -987,7 +987,7 @@ font:
 
   - file: https://unpkg.com/@mdi/font@7.3.67/fonts/materialdesignicons-webfont.ttf
     id: font_mdi
-    size: 32
+    size: 26
     glyphs:
       - "󰈸"  # mdi:fire (F0238)
       - "󰜗"  # mdi:snowflake (F0717)
@@ -1112,47 +1112,21 @@ display:
 
           // Bottom HA touch buttons
           const int y_btn = 198;
-          const int r = 34;
-
-          // "Make them pop" styling:
-          // - brighter cyan
-          // - filled center
-          // - thicker multi-ring glow for better straight-on visibility on ST7789
-          Color cyan_hot   = Color(0, 255, 255);
-          Color cyan_mid   = Color(0, 200, 255);
-          Color cyan_dim   = Color(0, 120, 170);
-          Color cyan_outer2= Color(0, 70, 110);
-
-          Color off_ring   = Color(175, 175, 175);
-          Color off_fill   = Color(40, 40, 40);
-          Color off_icon   = Color(170, 170, 170);
-
+          const int r = 32;
           auto draw_btn = [&](int x, bool is_on, const char* glyph) {
             if (is_on) {
-              // Outer glow rings
-              it.circle(x, y_btn, r + 10, cyan_outer2);
-              it.circle(x, y_btn, r + 8,  cyan_outer2);
-              it.circle(x, y_btn, r + 6,  cyan_dim);
-              it.circle(x, y_btn, r + 4,  cyan_mid);
-              it.circle(x, y_btn, r + 2,  cyan_hot);
-
-              // Filled center for extra luminance
-              it.filled_circle(x, y_btn, r - 1, Color(0, 35, 55));
-
-              // Main ring
-              it.circle(x, y_btn, r, cyan_hot);
-
-              // Icon
-              it.print(x, y_btn - 16, id(font_mdi), cyan_hot, TextAlign::TOP_CENTER, glyph);
+              it.circle(x, y_btn, r + 6, cyan_outer);
+              it.circle(x, y_btn, r + 4, cyan_outer);
+              it.circle(x, y_btn, r + 2, cyan);
+              it.circle(x, y_btn, r, cyan);
+              it.print(x, y_btn - 13, id(font_mdi), cyan, TextAlign::TOP_CENTER, glyph);
             } else {
-              // Off state: still clearly visible
-              it.filled_circle(x, y_btn, r - 1, off_fill);
-              it.circle(x, y_btn, r, off_ring);
-              it.print(x, y_btn - 16, id(font_mdi), off_icon, TextAlign::TOP_CENTER, glyph);
+              it.circle(x, y_btn, r, off_grey);
+              it.print(x, y_btn - 13, id(font_mdi), off_grey, TextAlign::TOP_CENTER, glyph);
             }
           };
-          draw_btn(60,  id(lr_lights_on).state,      "\U000F156D");  // sofa-outline
-          draw_btn(160, id(dr_light_on).state,      "\U000F1061");  // table-chair
+          draw_btn(60,  id(lr_lights_on).state,     "\U000F156D");  // sofa-outline
+          draw_btn(160, id(dr_light_on).state,     "\U000F1061");  // table-chair
           draw_btn(260, id(kitchen_lights_on).state,"\U000F0B7C");  // chef-hat
 
           id(draw_timer_timeline).execute();
