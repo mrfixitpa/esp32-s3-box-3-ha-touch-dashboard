@@ -1,10 +1,8 @@
 ---
 substitutions:
   thermostat_entity: climate.ecobee_thermostat
-  name: esp32-s3-box-3-touch-panel
-  friendly_name: ESP32 S3 Box 3 Touch Panel
-  project_name: ESP32-S3-Box-3 Touch Panel
-  project_version: "0.1.0"
+  name: esp32-s3-box-3-ha-touch-dashboard
+  friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   loading_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/loading_320_240.png
   idle_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/idle_320_240.png
   listening_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/listening_320_240.png
@@ -39,8 +37,8 @@ substitutions:
   font_family: Figtree
 
 esphome:
-  name: ${name}
-  friendly_name: ${friendly_name}
+  name: esp32-s3-box-3-ha-touch-dashboard
+  friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -146,14 +144,17 @@ binary_sensor:
   - platform: homeassistant
     id: lr_lights_on
     entity_id: light.living_room_can_lights
+    internal: true
 
   - platform: homeassistant
     id: dr_light_on
     entity_id: light.dining_room_light
+    internal: true
 
   - platform: homeassistant
     id: kitchen_lights_on
     entity_id: light.kitchen_lights
+    internal: true
 
 output:
   - platform: ledc
@@ -217,37 +218,33 @@ i2c:
   scl: GPIO18
   sda: GPIO8
 
+i2s_audio:
+  - id: i2s_audio_bus
+    i2s_lrclk_pin: GPIO45
+    i2s_bclk_pin: GPIO17
+    i2s_mclk_pin: GPIO2
+
 
 touchscreen:
   - platform: ft63x6
     id: box_touch
     address: 0x38
     update_interval: 50ms
-    # The Box-3 touch panel can work fine with polling; using an interrupt pin is optional.
     on_touch:
-      - lambda: |-
-          // Simple hitboxes for the 3 bottom buttons.
-          // Screen is 320x240.
-          const int x = touch.x;
-          const int y = touch.y;
-
-          // Only act in the bottom button row area.
-          if (y < 145) return;
-
-          // Button centers: (60, 192), (160, 192), (260, 192)
-          if (x < 110) {
-            id(toggle_living_room_lights).execute();
-          } else if (x < 210) {
-            id(toggle_dining_room_light).execute();
-          } else {
-            id(toggle_kitchen_lights).execute();
-          }
-
-i2s_audio:
-  - id: i2s_audio_bus
-    i2s_lrclk_pin: GPIO45
-    i2s_bclk_pin: GPIO17
-    i2s_mclk_pin: GPIO2
+      then:
+        - lambda: |-
+            // Bottom button row hitboxes (3 buttons)
+            const int x = touch.x;
+            const int y = touch.y;
+            // Only act in the bottom button row area
+            if (y < 145) return;
+            if (x < 110) {
+              id(toggle_living_room_lights).execute();
+            } else if (x < 210) {
+              id(toggle_dining_room_light).execute();
+            } else {
+              id(toggle_kitchen_lights).execute();
+            }
 
 audio_adc:
   - platform: es7210
@@ -443,14 +440,35 @@ script:
   - id: draw_hvac_icon
     then:
       - lambda: |-
-          // Draw a small HVAC status icon near the bottom-left.
+          // Draw a small HVAC status icon near the top-right.
           // Uses Home Assistant climate attribute: hvac_action (heating/cooling/idle)
           const std::string action = id(hvac_action).state.c_str();
           if (action == "heating") {
-            id(s3_box_lcd).print(304, 2, id(font_mdi), Color(255, 0, 0), TextAlign::TOP_RIGHT, "󰈸");  // fire
+            id(s3_box_lcd).print(304, 14, id(font_mdi), Color(255, 0, 0), TextAlign::CENTER, "󰈸");  // fire
           } else if (action == "cooling") {
-            id(s3_box_lcd).print(304, 2, id(font_mdi), Color(0, 140, 255), TextAlign::TOP_RIGHT, "󰜗");  // snowflake
+            id(s3_box_lcd).print(304, 14, id(font_mdi), Color(0, 140, 255), TextAlign::CENTER, "󰜗");  // snowflake
           }
+
+  - id: toggle_living_room_lights
+    then:
+      - homeassistant.service:
+          service: light.toggle
+          data:
+            entity_id: light.living_room_can_lights
+
+  - id: toggle_dining_room_light
+    then:
+      - homeassistant.service:
+          service: light.toggle
+          data:
+            entity_id: light.dining_room_light
+
+  - id: toggle_kitchen_lights
+    then:
+      - homeassistant.service:
+          service: light.toggle
+          data:
+            entity_id: light.kitchen_lights
 
   - id: draw_display
     then:
@@ -940,16 +958,6 @@ font:
     size: 24
     glyphsets:
       - ${font_glyphsets}
-
-
-  - file:
-      type: gfonts
-      family: ${font_family}
-      weight: 400
-    id: font_header
-    size: 16
-    glyphsets:
-      - ${font_glyphsets}
   - file:
       type: gfonts
       family: ${font_family}
@@ -965,9 +973,10 @@ font:
     glyphs:
       - "󰈸"  # mdi:fire (F0238)
       - "󰜗"  # mdi:snowflake (F0717)
-      - "󰭼"  # mdi:chef-hat (F0B7C)
-      - "󱁡"  # mdi:table-chair (F1061)
-      - "󱕭"  # mdi:sofa-outline (F156D)
+      - "\U000F156D"  # mdi:sofa-outline (F156D)
+      - "\U000F1061"  # mdi:table-chair (F1061)
+      - "\U000F0B7C"  # mdi:chef-hat (F0B7C)
+
 
 
 text_sensor:
@@ -1039,100 +1048,71 @@ display:
     pages:
       - id: idle_page
         lambda: |-
-          // Idle screen: top status strip + centered clock/date + 3 touch buttons
           it.fill(id(idle_color));
-
-          // Optional full-screen idle background image (hosted)
           it.image((it.get_width() / 2), (it.get_height() / 2), id(casita_idle), ImageAlign::CENTER);
 
-          // Theme accent color
-          Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255, 255, 255);
-
-          // Soft cyan used for "ON" buttons
+          Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
           Color cyan = Color(0, 210, 255);
           Color cyan_outer = Color(0, 120, 150);
           Color off_grey = Color(110, 110, 110);
 
-          // Top status strip background
+          // Top status strip
           it.filled_rectangle(0, 0, 320, 28, Color(0, 0, 0));
-
-          // Indoor temp (left side)
           if (!isnan(id(avg_indoor_temp).state)) {
-            it.printf(8, 6, id(font_header), accent, TextAlign::TOP_LEFT, "Indoor %.0f°", id(avg_indoor_temp).state);
+            it.printf(8, 6, id(font_bottom), accent, TextAlign::TOP_LEFT, "%.0f°", id(avg_indoor_temp).state);
           } else {
-            it.printf(8, 6, id(font_header), accent, TextAlign::TOP_LEFT, "Indoor --°");
+            it.printf(8, 6, id(font_bottom), accent, TextAlign::TOP_LEFT, "--°");
           }
-
-          // HVAC action icon (right side)
           id(draw_hvac_icon).execute();
 
-          // Clock + date (center area)
+          // Center clock + date
           auto t = id(ha_time).now();
           if (t.is_valid()) {
             bool colon_on = (t.second % 2) == 0;
-
             int hour12 = t.hour % 12;
             if (hour12 == 0) hour12 = 12;
-
-            // Clock (moved down to make room for the top strip)
+            int y_clock = 40;
             if (id(use_24h)) {
-              it.printf(150, 46, id(font_clock), accent, TextAlign::TOP_RIGHT, "%02d", t.hour);
-              it.printf(160, 46, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
-              it.printf(170, 46, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
+              it.printf(150, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%02d", t.hour);
+              it.printf(160, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
+              it.printf(170, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
             } else {
-              it.printf(150, 46, id(font_clock), accent, TextAlign::TOP_RIGHT, "%d", hour12);
-              it.printf(160, 46, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
-              it.printf(170, 46, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
-
+              it.printf(150, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%d", hour12);
+              it.printf(160, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
+              it.printf(170, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
               if (id(show_ampm)) {
                 const char* ampm = (t.hour >= 12) ? "PM" : "AM";
                 int ampm_x = 70 + (int) id(ampm_offset_x).state;
-                int ampm_y = 81 + (int) id(ampm_offset_y).state;
+                int ampm_y = 75 + (int) id(ampm_offset_y).state;
                 it.printf(ampm_x, ampm_y, id(font_ampm), accent, TextAlign::TOP_RIGHT, "%s", ampm);
               }
             }
-
-            // Date (below clock)
             it.strftime(160, 132, id(font_bottom), accent, TextAlign::TOP_CENTER, "%a, %b %d", t);
           } else {
-            it.printf(160, 90, id(font_bottom), accent, TextAlign::CENTER, "--:--");
+            it.printf(160, 80, id(font_bottom), accent, TextAlign::CENTER, "--:--");
           }
 
-          // Bottom button row (always tappable). Visual state reflects HA light state.
-          const int y = 192;
-          const int r = 34;
-
-          auto draw_button = [&](int x, bool is_on, const char* glyph) {
+          // Bottom HA touch buttons
+          const int y_btn = 198;
+          const int r = 32;
+          auto draw_btn = [&](int x, bool is_on, const char* glyph) {
             if (is_on) {
-              // Faux glow: a couple of outer rings
-              it.circle(x, y, r + 6, cyan_outer);
-              it.circle(x, y, r + 4, cyan_outer);
-              it.circle(x, y, r + 2, cyan);
-              it.circle(x, y, r, cyan);
-
-              it.print(x, y - 13, id(font_mdi), cyan, TextAlign::TOP_CENTER, glyph);
+              it.circle(x, y_btn, r + 6, cyan_outer);
+              it.circle(x, y_btn, r + 4, cyan_outer);
+              it.circle(x, y_btn, r + 2, cyan);
+              it.circle(x, y_btn, r, cyan);
+              it.print(x, y_btn - 13, id(font_mdi), cyan, TextAlign::TOP_CENTER, glyph);
             } else {
-              it.circle(x, y, r, off_grey);
-              it.print(x, y - 13, id(font_mdi), off_grey, TextAlign::TOP_CENTER, glyph);
+              it.circle(x, y_btn, r, off_grey);
+              it.print(x, y_btn - 13, id(font_mdi), off_grey, TextAlign::TOP_CENTER, glyph);
             }
           };
+          draw_btn(60,  id(lr_lights_on).state,     "\U000F156D");  // sofa-outline
+          draw_btn(160, id(dr_light_on).state,     "\U000F1061");  // table-chair
+          draw_btn(260, id(kitchen_lights_on).state,"\U000F0B7C");  // chef-hat
 
-          draw_button(60,  id(lr_lights_on).state,     "󱕭"); // sofa-outline
-          draw_button(160, id(dr_light_on).state,      "󱁡"); // table-chair
-          draw_button(260, id(kitchen_lights_on).state,"󰭼"); // chef-hat
-
-          // Keep existing timer widgets (if any)
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
-
-
-
-
-
-
-
-
-
       - id: listening_page
         lambda: |-
           it.fill(id(listening_color));
