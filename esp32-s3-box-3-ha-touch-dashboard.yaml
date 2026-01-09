@@ -2,7 +2,7 @@
 substitutions:
   thermostat_entity: climate.ecobee_thermostat
   name: box3-ha-touchdash
-  friendly_name: ESP32 S3 HA Touch Dash
+  friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   loading_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/loading_320_240.png
   idle_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/idle_320_240.png
   listening_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/listening_320_240.png
@@ -37,7 +37,7 @@ substitutions:
   font_family: Figtree
 
 esphome:
-  name: esp32-s3-box-3-ha-touch-dashboard
+  name: box3-ha-touchdash
   friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   min_version: 2025.5.0
   name_add_mac_suffix: true
