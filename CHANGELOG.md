@@ -1,8 +1,9 @@
 # Changelog
 
+## v0.1.2
+- Improved bottom button visibility (brighter cyan + stronger glow + filled button center)
+- Added ESPHome project metadata version for easier tracking
+- No behavior changes to voice assistant states; idle dashboard remains default return screen
+
 ## v0.1.0
-- Initial release
-- New idle screen UI: top status strip (indoor temp + HVAC), centered clock/date
-- Three always-tappable Home Assistant light buttons with state-based cyan glow
-- Voice assistant UI remains intact and returns to the custom idle screen when finished
-- Removed unnecessary color-wheel UI for this project direction
+- Initial working baseline: idle dashboard with indoor temp/HVAC, clock/date, and 3 HA touch buttons
