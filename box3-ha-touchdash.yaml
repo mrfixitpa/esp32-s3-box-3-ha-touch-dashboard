@@ -226,9 +226,10 @@ i2s_audio:
 
 
 touchscreen:
-  - platform: ft63x6
+  - platform: gt911
     id: box_touch
-    address: 0x38
+    interrupt_pin: GPIO3
+    # Note: reset_pin is shared with the LCD reset line on the ESP32-S3-BOX-3, so we leave it unset.
     update_interval: 50ms
     on_touch:
       then:
@@ -1049,8 +1050,6 @@ display:
       - id: idle_page
         lambda: |-
           it.fill(id(idle_color));
-          it.image((it.get_width() / 2), (it.get_height() / 2), id(casita_idle), ImageAlign::CENTER);
-
           Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
           Color cyan = Color(0, 210, 255);
           Color cyan_outer = Color(0, 120, 150);
