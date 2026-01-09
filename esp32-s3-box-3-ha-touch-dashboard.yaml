@@ -1,8 +1,8 @@
 ---
 substitutions:
   thermostat_entity: climate.ecobee_thermostat
-  name: esp32-s3-box-3-ha-touch-dashboard
-  friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
+  name: box3-ha-touchdash
+  friendly_name: ESP32 S3 HA Touch Dash
   loading_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/loading_320_240.png
   idle_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/idle_320_240.png
   listening_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/listening_320_240.png
