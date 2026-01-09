@@ -40,7 +40,7 @@ esphome:
   name: box3-ha-touchdash
   friendly_name: ESP32 S3 Box 3 HA Touch Dashboard
   project:
-    name: mrfixitpa/esp32-s3-box-3-ha-touch-dashboard
+    name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
     version: 0.1.2
   min_version: 2025.5.0
   name_add_mac_suffix: true
