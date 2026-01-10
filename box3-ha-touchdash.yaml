@@ -97,10 +97,6 @@ captive_portal:
 
 
 
-interval:
-  # v0.1.6: Removed 1s idle redraw loop to prevent redraw storms.
-  # Display is refreshed on minute ticks and on state changes via request_draw.
-
 sensor:
   - platform: homeassistant
     id: avg_indoor_temp
