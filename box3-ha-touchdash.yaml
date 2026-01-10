@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.2.0-pre3
+    version: 0.2.0-pre4
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -154,16 +154,25 @@ binary_sensor:
     id: lr_lights_on
     entity_id: light.living_room_can_lights
     internal: true
+    on_state:
+      - script.execute: request_draw
+
 
   - platform: homeassistant
     id: dr_light_on
     entity_id: light.dining_room_light
     internal: true
+    on_state:
+      - script.execute: request_draw
+
 
   - platform: homeassistant
     id: kitchen_lights_on
     entity_id: light.kitchen_lights
     internal: true
+    on_state:
+      - script.execute: request_draw
+
 
 output:
   - platform: ledc
@@ -468,6 +477,7 @@ script:
           service: light.toggle
           data:
             entity_id: light.living_room_can_lights
+      - script.execute: request_draw
 
   - id: toggle_dining_room_light
     then:
@@ -475,6 +485,7 @@ script:
           service: light.toggle
           data:
             entity_id: light.dining_room_light
+      - script.execute: request_draw
 
   - id: toggle_kitchen_lights
     then:
@@ -482,6 +493,7 @@ script:
           service: light.toggle
           data:
             entity_id: light.kitchen_lights
+      - script.execute: request_draw
 
   - id: draw_display
     then:
