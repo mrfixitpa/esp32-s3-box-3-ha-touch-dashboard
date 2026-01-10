@@ -13,7 +13,7 @@ substitutions:
   timer_finished_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/timer_finished_320_240.png
 
   loading_illustration_background_color: "000000"
-  idle_illustration_background_color: "000000"
+  idle_illustration_background_color: "A7D8FF"
   listening_illustration_background_color: "FFFFFF"
   thinking_illustration_background_color: "FFFFFF"
   replying_illustration_background_color: "FFFFFF"
@@ -1119,8 +1119,6 @@ display:
         lambda: |-
           it.fill(id(idle_color));
           // Accent lines (low cost)
-          it.line(0, 28, 319, 28, Color(255, 255, 255));     // subtle divider under header
-          it.line(0, 29, 319, 29, Color(160, 220, 255));     // soft highlight
 
           Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
           Color on_col = Color(255, 180, 0);          // amber (high contrast)
@@ -1136,12 +1134,12 @@ display:
           else if (action == "cooling") hvac_glyph = "\U000F0717"; // mdi:snowflake
           }
           if (hvac_glyph[0] != '\0') {
-          it.print(8, 4, id(font_mdi), accent, TextAlign::TOP_LEFT, hvac_glyph);
+          it.print(6, 4, id(font_mdi), accent, TextAlign::TOP_LEFT, hvac_glyph);
           }
           if (!isnan(id(avg_indoor_temp).state)) {
-          it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
+          it.printf(28, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
           } else {
-          it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
+          it.printf(28, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
           }
           // HVAC icon rendered inline with header text
 
