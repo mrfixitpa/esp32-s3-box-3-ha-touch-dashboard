@@ -10,7 +10,7 @@ substitutions:
   thinking_illustration_file: https://github.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/raw/main/assets/illustrations/thinking.png
   replying_illustration_file: https://github.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/raw/main/assets/illustrations/replying.png
   error_illustration_file: https://github.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/raw/main/assets/illustrations/error.png
-  timer_finished_illustration_file: https://github.com/esphome/wake-word-voice-assistants/raw/main/casita/timer_finished_320_240.png
+  timer_finished_illustration_file: https://github.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/raw/main/assets/illustrations/timer_finished.png
 
   loading_illustration_background_color: "000000"
   idle_illustration_background_color: "1F3A5F"
