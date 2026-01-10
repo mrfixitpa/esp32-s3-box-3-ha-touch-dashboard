@@ -684,11 +684,9 @@ switch:
     name: Clock 24 Hour Mode
     id: clock_24h_mode
     restore_mode: RESTORE_DEFAULT_OFF
-    optimistic: false
-    on_turn_on:
+    turn_on_action:
       - lambda: id(use_24h) = true;
-      - script.execute: draw_display
-    on_turn_off:
+      - script.execute: draw_display    turn_off_action:
       - lambda: id(use_24h) = false;
       - script.execute: draw_display
 
