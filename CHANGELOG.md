@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.4
+- Polished idle layout: moved date and button row up for better vertical balance
+- HVAC status icon is now inline before the Indoor Temp label (instead of the far top-right)
+- “Indoor Temp” header uses a bolder font for improved readability
+
 ## v0.1.3
 - Idle header simplified: smaller **Indoor Temp** label aligned left
 - Removed the solid black header bar so `idle.png` fills the top of the screen
