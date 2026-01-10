@@ -333,7 +333,6 @@ micro_wake_word:
   id: mww
   models:
     - okay_nabu
-    - hey_mycroft
     - hey_jarvis
   on_wake_word_detected:
     - voice_assistant.start:
@@ -1139,7 +1138,7 @@ display:
           }
 
           // Bottom HA touch buttons
-          const int y_btn = 184;
+          const int y_btn = 190;
           const int r = 32;
           auto draw_btn = [&](int x, bool is_on, const char* glyph) {
             // Always draw a dark backing so buttons stay readable on any background.
