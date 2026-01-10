@@ -91,14 +91,14 @@ Includes:
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="images/idle.jpg" width="45%">
-  <img src="images/listening.jpg" width="45%">
+  <img src="assets/screenshots/idle.jpg" width="45%">
+  <img src="assets/screenshots/listening.jpg" width="45%">
 </p>
 <p align="center"><em>Idle Screen (Clock, Temperature & HVAC Status) • Listening</em></p>
 
 <p align="center">
-  <img src="images/thinking.jpg" width="45%">
-  <img src="images/speaking.jpg" width="45%">
+  <img src="assets/screenshots/thinking.jpg" width="45%">
+  <img src="assets/screenshots/speaking.jpg" width="45%">
 </p>
 <p align="center"><em>Thinking • Speaking / Replying</em></p>
 
