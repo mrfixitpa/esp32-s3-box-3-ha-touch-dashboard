@@ -679,16 +679,19 @@ switch:
     on_turn_off:
       - lambda: id(show_ampm) = false;
       - script.execute: draw_display
-
   - platform: template
     name: Clock 24 Hour Mode
     id: clock_24h_mode
     restore_mode: RESTORE_DEFAULT_OFF
+    lambda: |-
+      return id(use_24h);
     turn_on_action:
       - lambda: id(use_24h) = true;
-      - script.execute: draw_display    turn_off_action:
+      - script.execute: draw_display
+    turn_off_action:
       - lambda: id(use_24h) = false;
       - script.execute: draw_display
+
 
   - platform: gpio
     name: Speaker Enable
