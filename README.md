@@ -102,6 +102,12 @@ Includes:
 </p>
 <p align="center"><em>Thinking • Speaking / Replying</em></p>
 
+<p align="center">
+  <img src="assets/screenshots/control.jpg" width="45%">
+  <img src="assets/screenshots/configuration.jpg" width="45%">
+</p>
+<p align="center"><em>Control Screen • Configuration Screen</em></p>
+
 ---
 
 ## 🖼️ Screen Illustrations (Images)
