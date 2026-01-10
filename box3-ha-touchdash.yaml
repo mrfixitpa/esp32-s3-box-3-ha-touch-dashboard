@@ -1034,7 +1034,7 @@ text_sensor:
           std::string name = id(text_request).state.c_str();
           std::string truncated = esphome::str_truncate(name.c_str(),31);
           id(text_request).state = (truncated+"...").c_str();
-        }
+          }
 
   - id: text_response
     platform: template
@@ -1044,7 +1044,7 @@ text_sensor:
           std::string name = id(text_response).state.c_str();
           std::string truncated = esphome::str_truncate(name.c_str(),31);
           id(text_response).state = (truncated+"...").c_str();
-        }
+          }
 
 color:
   - id: idle_color
@@ -1092,16 +1092,16 @@ display:
           Color btn_bg = Color(0, 0, 60);           // dark backing for contrast
 
           // Top status strip
-        // Inline HVAC action icon (left) + Indoor Temp label
-        const char* hvac_glyph = "";
-        if (id(hvac_action).has_state()) {
+          // Inline HVAC action icon (left) + Indoor Temp label
+          const char* hvac_glyph = "";
+          if (id(hvac_action).has_state()) {
           const std::string action = id(hvac_action).state.c_str();
           if (action == "heating") hvac_glyph = "\U000F0238";      // mdi:fire
           else if (action == "cooling") hvac_glyph = "\U000F0717"; // mdi:snowflake
-        }
-        if (hvac_glyph[0] != '\0') {
+          }
+          if (hvac_glyph[0] != '\0') {
           it.print(8, 4, id(font_mdi), accent, TextAlign::TOP_LEFT, hvac_glyph);
-        }
+          }
           if (!isnan(id(avg_indoor_temp).state)) {
             it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
           } else {
