@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.2.0-pre1
+    version: 0.2.0-pre2
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -1139,16 +1139,16 @@ display:
 
           // Left: Indoor Temp  67°
           if (!isnan(id(avg_indoor_temp).state)) {
-            it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp  %.0f°", id(avg_indoor_temp).state);
+            it.printf(2, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
           } else {
-            it.print(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp  --°");
+            it.print(2, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
           }
 
           // Right: Outdoor Temp  31°
           if (!isnan(id(outdoor_temp).state)) {
-            it.printf(314, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp  %.0f°", id(outdoor_temp).state);
+            it.printf(319, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp %.0f°", id(outdoor_temp).state);
           } else {
-            it.print(314, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp  --°");
+            it.print(319, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp --°");
           }
 
           // Center: HVAC icon (only when running)
@@ -1255,3 +1255,4 @@ display:
           it.fill(Color::BLACK);
           id(draw_timer_timeline).execute();
           id(draw_active_timer_widget).execute();
+
