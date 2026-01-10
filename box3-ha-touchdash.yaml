@@ -1,5 +1,6 @@
 ---
 substitutions:
+  idle_color: 0xA7D8FF
   thermostat_entity: climate.ecobee_thermostat
   name: box3-ha-touchdash
   friendly_name: ESP32 S3 HA Touch Dash
@@ -41,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.1.4
+    version: 0.1.5
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -1084,8 +1085,11 @@ display:
       - id: idle_page
         lambda: |-
           it.fill(id(idle_color));
-          it.image((it.get_width() / 2), (it.get_height() / 2), id(casita_idle), ImageAlign::CENTER);
-          Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
+        // Accent lines (low cost)
+        it.line(0, 28, 319, 28, Color(255, 255, 255));     // subtle divider under header
+        it.line(0, 29, 319, 29, Color(160, 220, 255));     // soft highlight
+
+Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
           Color on_col = Color(255, 180, 0);          // amber (high contrast)
           Color on_outer = Color(160, 90, 0);
           Color btn_bg = Color(0, 0, 60);           // dark backing for contrast
