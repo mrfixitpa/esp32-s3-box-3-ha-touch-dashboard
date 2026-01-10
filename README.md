@@ -58,16 +58,16 @@ Indoor Temp    [ HVAC ]    Outdoor Temp
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/idle.png" width="45%">
-  <img src="assets/screenshots/controls.png" width="45%">
+  <img src="assets/screenshots/idle.jpg" width="45%">
+  <img src="assets/screenshots/listening.jpg" width="45%">
 </p>
-<p align="center"><em>Idle Screen • Touch Controls</em></p>
+<p align="center"><em>Idle Screen • Listening</em></p>
 
 <p align="center">
-  <img src="assets/screenshots/heating.png" width="45%">
-  <img src="assets/screenshots/cooling.png" width="45%">
+  <img src="assets/screenshots/thinking.jpg" width="45%">
+  <img src="assets/screenshots/replying.jpg" width="45%">
 </p>
-<p align="center"><em>Heating • Cooling States</em></p>
+<p align="center"><em>Thinking • Replying</em></p>
 
 ---
 
