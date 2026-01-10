@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.1.6
+    version: 0.2.0-pre1
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -102,6 +102,12 @@ sensor:
     id: avg_indoor_temp
     entity_id: sensor.average_indoor_temperature
     internal: true
+
+  - platform: homeassistant
+    id: outdoor_temp
+    entity_id: sensor.outdoor_temperature
+    internal: true
+
 
 time:
   - platform: homeassistant
@@ -988,7 +994,7 @@ font:
       family: ${font_family}
       weight: 400
     id: font_header_small
-    size: 14
+    size: 16
     glyphsets:
       - ${font_glyphsets}
 
@@ -1126,23 +1132,36 @@ display:
           Color btn_bg = Color(0, 0, 60);           // dark backing for contrast
 
           // Top status strip
-          // Inline HVAC action icon (left) + Indoor Temp label
+          // Header: Indoor Temp (left) | HVAC (center) | Outdoor Temp (right)
+          // Indoor / Outdoor temps use the theme accent color; HVAC icon uses fixed state colors.
+          Color hvac_heat = Color(255, 0, 0);      // red
+          Color hvac_cool = Color(0, 120, 255);   // blue
+
+          // Left: Indoor Temp  67°
+          if (!isnan(id(avg_indoor_temp).state)) {
+            it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp  %.0f°", id(avg_indoor_temp).state);
+          } else {
+            it.print(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp  --°");
+          }
+
+          // Right: Outdoor Temp  31°
+          if (!isnan(id(outdoor_temp).state)) {
+            it.printf(314, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp  %.0f°", id(outdoor_temp).state);
+          } else {
+            it.print(314, 4, id(font_header_small), accent, TextAlign::TOP_RIGHT, "Outdoor Temp  --°");
+          }
+
+          // Center: HVAC icon (only when running)
           const char* hvac_glyph = "";
+          Color hvac_col = accent;
           if (id(hvac_action).has_state()) {
-          const std::string action = id(hvac_action).state.c_str();
-          if (action == "heating") hvac_glyph = "\U000F0238";      // mdi:fire
-          else if (action == "cooling") hvac_glyph = "\U000F0717"; // mdi:snowflake
+            const std::string action = id(hvac_action).state.c_str();
+            if (action == "heating") { hvac_glyph = "\U000F0238"; hvac_col = hvac_heat; }
+            else if (action == "cooling") { hvac_glyph = "\U000F0717"; hvac_col = hvac_cool; }
           }
           if (hvac_glyph[0] != '\0') {
-          it.print(6, 4, id(font_mdi), accent, TextAlign::TOP_LEFT, hvac_glyph);
+            it.print(160, 4, id(font_mdi), hvac_col, TextAlign::TOP_CENTER, hvac_glyph);
           }
-          if (!isnan(id(avg_indoor_temp).state)) {
-          it.printf(28, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
-          } else {
-          it.printf(28, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
-          }
-          // HVAC icon rendered inline with header text
-
 
           // Center clock + date
           auto t = id(ha_time).now();
