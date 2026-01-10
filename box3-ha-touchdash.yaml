@@ -42,20 +42,20 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.1.5
+    version: 0.1.6
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
     priority: 600
     then:
-      - script.execute: draw_display
+      - script.execute: request_draw
       - delay: 30s
       - if:
           condition:
             lambda: return id(init_in_progress);
           then:
             - lambda: id(init_in_progress) = false;
-            - script.execute: draw_display
+            - script.execute: request_draw
 
 esp32:
   board: esp32s3box
@@ -74,9 +74,9 @@ psram:
 
 api:
   on_client_connected:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_client_disconnected:
-    - script.execute: draw_display
+    - script.execute: request_draw
 
 ota:
   - platform: esphome
@@ -88,9 +88,9 @@ logger:
 wifi:
   ap:
   on_connect:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_disconnect:
-    - script.execute: draw_display
+    - script.execute: request_draw
 
 captive_portal:
 
@@ -98,18 +98,8 @@ captive_portal:
 
 
 interval:
-  - interval: 1s
-    then:
-      - if:
-          condition:
-            lambda: |-
-              return
-                !id(init_in_progress) &&
-                wifi::global_wifi_component->is_connected() &&
-                api::global_api_server->is_connected() &&
-                (id(voice_assistant_phase) == ${voice_assist_idle_phase_id});
-          then:
-            - script.execute: draw_display
+  # v0.1.6: Removed 1s idle redraw loop to prevent redraw storms.
+  # Display is refreshed on minute ticks and on state changes via request_draw.
 
 sensor:
   - platform: homeassistant
@@ -120,6 +110,19 @@ sensor:
 time:
   - platform: homeassistant
     id: ha_time
+    on_time:
+      - seconds: 0
+        then:
+          - if:
+              condition:
+                lambda: |-
+                  return
+                    !id(init_in_progress) &&
+                    wifi::global_wifi_component->is_connected() &&
+                    api::global_api_server->is_connected() &&
+                    (id(voice_assistant_phase) == ${voice_assist_idle_phase_id});
+              then:
+                - script.execute: request_draw
 
 button:
   - platform: factory_reset
@@ -212,11 +215,11 @@ light:
     on_turn_on:
       - lambda: |-
           id(ui_theme_on) = true;
-      - script.execute: draw_display
+      - script.execute: request_draw
     on_turn_off:
       - lambda: |-
           id(ui_theme_on) = false;
-      - script.execute: draw_display
+      - script.execute: request_draw
 
 i2c:
   scl: GPIO18
@@ -234,10 +237,14 @@ touchscreen:
     id: box_touch
     interrupt_pin: GPIO3
     # Note: reset_pin is shared with the LCD reset line on the ESP32-S3-BOX-3, so we leave it unset.
-    update_interval: 50ms
+    update_interval: 100ms
     on_touch:
       then:
         - lambda: |-
+            const uint32_t now_ms = millis();
+            if (now_ms - id(last_touch_ms) < 250) return;
+            id(last_touch_ms) = now_ms;
+
             // Bottom button row hitboxes (3 buttons)
             const int x = touch.x;
             const int y = touch.y;
@@ -318,7 +325,7 @@ media_player:
               voice_assistant.is_running:
           then:
             - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
-            - script.execute: draw_display
+            - script.execute: request_draw
     on_idle:
       # Since VA isn't running, this is the end of user-intiated media playback. Restart the wake word.
       - if:
@@ -328,7 +335,7 @@ media_player:
           then:
             - script.execute: start_wake_word
             - script.execute: set_idle_or_mute_phase
-            - script.execute: draw_display
+            - script.execute: request_draw
 
 micro_wake_word:
   id: mww
@@ -355,21 +362,21 @@ voice_assistant:
     - text_sensor.template.publish:
         id: text_response
         state: "..."
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_stt_vad_end:
     - lambda: id(voice_assistant_phase) = ${voice_assist_thinking_phase_id};
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_stt_end:
     - text_sensor.template.publish:
         id: text_request
         state: !lambda return x;
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_tts_start:
     - text_sensor.template.publish:
         id: text_response
         state: !lambda return x;
     - lambda: id(voice_assistant_phase) = ${voice_assist_replying_phase_id};
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_end:
     # Wait a short amount of time to see if an announcement starts
     - wait_until:
@@ -391,7 +398,7 @@ voice_assistant:
           - lambda: id(va).set_use_wake_word(false);
           - micro_wake_word.start:
     - script.execute: set_idle_or_mute_phase
-    - script.execute: draw_display
+    - script.execute: request_draw
     # Clear text sensors
     - text_sensor.template.publish:
         id: text_request
@@ -405,7 +412,7 @@ voice_assistant:
           lambda: return !id(init_in_progress);
         then:
           - lambda: id(voice_assistant_phase) = ${voice_assist_error_phase_id};
-          - script.execute: draw_display
+          - script.execute: request_draw
           - delay: 1s
           - if:
               condition:
@@ -414,30 +421,30 @@ voice_assistant:
                 - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
               else:
                 - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
-          - script.execute: draw_display
+          - script.execute: request_draw
   on_client_connected:
     - lambda: id(init_in_progress) = false;
     - script.execute: start_wake_word
     - script.execute: set_idle_or_mute_phase
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_client_disconnected:
     - script.execute: stop_wake_word
     - lambda: id(voice_assistant_phase) = ${voice_assist_not_ready_phase_id};
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_timer_started:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_timer_cancelled:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_timer_updated:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_timer_tick:
-    - script.execute: draw_display
+    - script.execute: request_draw
   on_timer_finished:
     - switch.turn_on: timer_ringing
     - wait_until:
         media_player.is_announcing:
     - lambda: id(voice_assistant_phase) = ${voice_assist_timer_finished_phase_id};
-    - script.execute: draw_display
+    - script.execute: request_draw
 
 script:
 
@@ -531,6 +538,20 @@ script:
           else:
             - display.page.show: initializing_page
             - component.update: s3_box_lcd
+
+  - id: request_draw
+    mode: restart
+    then:
+      - lambda: |-
+          id(draw_pending) = true;
+      - delay: 120ms
+      - if:
+          condition:
+            lambda: 'return id(draw_pending);'
+          then:
+            - lambda: 'id(draw_pending) = false;'
+            - script.execute: draw_display
+
 
   - id: fetch_first_active_timer
     then:
@@ -675,10 +696,10 @@ switch:
     optimistic: true
     on_turn_on:
       - lambda: id(show_ampm) = true;
-      - script.execute: draw_display
+      - script.execute: request_draw
     on_turn_off:
       - lambda: id(show_ampm) = false;
-      - script.execute: draw_display
+      - script.execute: request_draw
   - platform: template
     name: Clock 24 Hour Mode
     id: clock_24h_mode
@@ -686,11 +707,16 @@ switch:
     lambda: |-
       return id(use_24h);
     turn_on_action:
-      - lambda: id(use_24h) = true;
-      - script.execute: draw_display
+      - lambda: |-
+          id(use_24h) = true;
+          id(show_ampm) = false;
+      - switch.turn_off: ampm_toggle
+      - script.execute: request_draw
     turn_off_action:
-      - lambda: id(use_24h) = false;
-      - script.execute: draw_display
+      - lambda: |-
+          id(use_24h) = false;
+          id(show_ampm) = id(ampm_toggle).state;
+      - script.execute: request_draw
 
 
   - platform: gpio
@@ -709,11 +735,11 @@ switch:
     on_turn_off:
       - microphone.unmute:
       - lambda: id(voice_assistant_phase) = ${voice_assist_idle_phase_id};
-      - script.execute: draw_display
+      - script.execute: request_draw
     on_turn_on:
       - microphone.mute:
       - lambda: id(voice_assistant_phase) = ${voice_assist_muted_phase_id};
-      - script.execute: draw_display
+      - script.execute: request_draw
   - platform: template
     id: timer_ringing
     optimistic: true
@@ -759,7 +785,7 @@ number:
     optimistic: true
     on_value:
       then:
-        - script.execute: draw_display
+        - script.execute: request_draw
 
   - platform: template
     name: AM/PM Vertical Offset
@@ -773,7 +799,7 @@ number:
     optimistic: true
     on_value:
       then:
-        - script.execute: draw_display
+        - script.execute: request_draw
 
   - platform: template
     name: Clock Horizontal Offset
@@ -787,7 +813,7 @@ number:
     optimistic: true
     on_value:
       then:
-        - script.execute: draw_display
+        - script.execute: request_draw
 
 select:
   - platform: template
@@ -834,6 +860,16 @@ select:
                         - micro_wake_word.start
 
 globals:
+  - id: draw_pending
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
+  - id: last_touch_ms
+    type: uint32_t
+    restore_value: no
+    initial_value: "0"
+
   - id: show_ampm
     type: bool
     restore_value: true
