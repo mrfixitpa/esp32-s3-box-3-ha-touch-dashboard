@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.6
+- Removed 1s idle redraw loop; refresh now happens on minute ticks and on state changes.
+- Added debounced redraw wrapper (`request_draw`) to prevent redraw storms.
+- Touch polling slowed and taps debounced to reduce repeated trigger spam.
+- Cleaned up 12/24-hour toggle logic so AM/PM is consistent and predictable.
+- 
 ## v0.1.5
 - Performance: idle screen now uses a solid light-blue background instead of redrawing a full-screen PNG
 - Added low-cost accent divider lines under the header (no image blitting)
