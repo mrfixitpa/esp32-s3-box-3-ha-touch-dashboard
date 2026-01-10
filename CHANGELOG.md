@@ -1,5 +1,14 @@
-# Changelog (Touch Dashboard)
+# Changelog — Touch Dashboard
 
+## v0.2.0
+- Added structured header layout (Indoor / HVAC / Outdoor)
+- Added outdoor temperature support
+- Restored state-colored HVAC icons (red heat / blue cool)
+- Implemented fixed center gutter for improved spacing
+- Immediate visual feedback for touch buttons
+- Improved image reliability using raw.githubusercontent.com URLs
+- Retained all v0.1.x stability improvements
+-
 ## v0.2.0-pre1
 - Introduced structured header layout (Indoor / HVAC / Outdoor)
 - Added outdoor temperature support
