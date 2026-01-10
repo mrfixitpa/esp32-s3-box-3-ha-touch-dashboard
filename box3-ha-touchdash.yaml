@@ -684,7 +684,7 @@ switch:
     name: Clock 24 Hour Mode
     id: clock_24h_mode
     restore_mode: RESTORE_DEFAULT_OFF
-    optimistic: true
+    optimistic: false
     on_turn_on:
       - lambda: id(use_24h) = true;
       - script.execute: draw_display
@@ -1142,7 +1142,7 @@ display:
           }
 
           // Bottom HA touch buttons
-          const int y_btn = 190;
+          const int y_btn = 194;
           const int r = 32;
           auto draw_btn = [&](int x, bool is_on, const char* glyph) {
           // Always draw a dark backing so buttons stay readable on any background.
