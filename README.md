@@ -1,11 +1,11 @@
 # ESP32-S3-Box-3 HA Touch Dashboard
 
-This repository contains a **custom ESPHome package** for the **ESP32-S3-Box-3**, providing a **stable, wall-friendly touch dashboard** tightly integrated with Home Assistant.
+This repository contains a **custom ESPHome package** for the **ESP32-S3-Box-3**, providing a **stable, wall-friendly touch dashboard** integrated with Home Assistant.
 
-This project is **separate from the Voice Assistant display repository** and follows its **own versioning (v0.x.x)**.
+> ✅ **Current Stable Release:**  
+> **v0.2.0**
 
-> 🚧 **Pre-release Notice**  
-> The features described below are part of **v0.2.0-pre1**, a pre-release focused on header layout improvements and added outdoor temperature support.
+This project is **separate from the Voice Assistant display repository** and follows its own **v0.x.x** versioning.
 
 ---
 
@@ -19,8 +19,8 @@ This project is **separate from the Voice Assistant display repository** and fol
 
 ---
 
-### 🕒 Idle Header (v0.2.0)
-The top header follows a structured, balanced layout:
+### 🕒 Idle Header
+Structured, balanced header layout:
 
 ```
 Indoor Temp    [ HVAC ]    Outdoor Temp
@@ -39,16 +39,48 @@ Indoor Temp    [ HVAC ]    Outdoor Temp
 ---
 
 ### 🎨 UI Theme Color
-- Exposes a virtual RGB light in Home Assistant
-- Theme color applies to clock and temperature text
-- HVAC icons are not affected by theme color
+- Virtual RGB light exposed in Home Assistant
+- Theme color applies to:
+  - Clock
+  - Indoor temperature
+  - Outdoor temperature
+- HVAC icons are never theme-colored
 
 ---
 
 ### 👆 Touch Buttons
-- Bottom-row touch areas for Home Assistant actions
-- Transparent button backgrounds for a clean wall-mounted look
-- Touch handling is debounced for reliability
+- Bottom-row touch buttons for Home Assistant actions
+- Transparent backgrounds for a clean wall-mounted look
+- Immediate visual feedback (amber glow) on state change
+
+---
+
+## 🖼️ Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/idle.png" width="45%">
+  <img src="assets/screenshots/controls.png" width="45%">
+</p>
+<p align="center"><em>Idle Screen • Touch Controls</em></p>
+
+<p align="center">
+  <img src="assets/screenshots/heating.png" width="45%">
+  <img src="assets/screenshots/cooling.png" width="45%">
+</p>
+<p align="center"><em>Heating • Cooling States</em></p>
+
+---
+
+## 🎨 Screen Illustrations (Optional)
+
+This dashboard supports **full-screen illustration sets** for visual personality and feedback.
+
+### Available Illustration Packs
+- **JARVIS-style**
+- **Cute Face-style**
+
+Illustration packs:
+https://github.com/mrfixitpa/esp32-s3-box-3/tree/main/illustrations
 
 ---
 
@@ -61,20 +93,64 @@ Indoor Temp    [ HVAC ]    Outdoor Temp
 
 ---
 
-## 🚀 Quick Start
+## ✏️ Required User Configuration (Before Compiling)
 
+### Indoor Temperature Sensor
 ```yaml
-packages:
-  box3_touchdash:
-    url: github://mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/box3-ha-touchdash.yaml@v0.2.0-pre1
+sensor:
+  - platform: homeassistant
+    id: avg_indoor_temp
+    entity_id: sensor.average_indoor_temperature
+    internal: true
+```
+
+### Outdoor Temperature Sensor
+```yaml
+sensor:
+  - platform: homeassistant
+    id: outdoor_temp
+    entity_id: sensor.outdoor_temperature
+    internal: true
+```
+
+### HVAC Status
+```yaml
+text_sensor:
+  - platform: homeassistant
+    id: hvac_action
+    entity_id: climate.your_thermostat
+    attribute: hvac_action
+    internal: true
+```
+
+### Touch Button Actions
+```yaml
+script:
+  - id: toggle_living_room_lights
+    then:
+      - homeassistant.service:
+          service: light.toggle
+          data:
+            entity_id: light.living_room_lights
 ```
 
 ---
 
-## 🛠 Notes
-- Screen dimming is best handled via Home Assistant automations
-- Avoid fast redraw intervals
-- Header layout finalized during v0.2.0 pre-releases
+## 🌙 Screen Brightness Automation (Recommended)
+
+Use Home Assistant automations to control screen brightness:
+
+https://github.com/mrfixitpa/HA-Code-and-Templates/blob/main/ESP32-S3-Box3-Screen-Brightness-Automation
+
+---
+
+## 🚀 Installation
+
+```yaml
+packages:
+  box3_touchdash:
+    url: github://mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/box3-ha-touchdash.yaml@v0.2.0
+```
 
 ---
 
