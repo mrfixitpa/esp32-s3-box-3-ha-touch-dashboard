@@ -1,5 +1,12 @@
-# Changelog
+# Changelog (Touch Dashboard)
 
+## v0.2.0-pre1
+- Introduced structured header layout (Indoor / HVAC / Outdoor)
+- Added outdoor temperature support
+- Restored state-based HVAC icon colors (red heat / blue cool)
+- Increased header text size for readability
+- Retained all v0.1.x stability improvements
+- 
 ## v0.1.6
 - Removed 1s idle redraw loop; refresh now happens on minute ticks and on state changes.
 - Added debounced redraw wrapper (`request_draw`) to prevent redraw storms.
