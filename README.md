@@ -65,9 +65,15 @@ Indoor Temp    [ HVAC ]    Outdoor Temp
 
 <p align="center">
   <img src="assets/screenshots/thinking.jpg" width="45%">
-  <img src="assets/screenshots/replying.jpg" width="45%">
+  <img src="assets/screenshots/speaking.jpg" width="45%">
 </p>
-<p align="center"><em>Thinking • Replying</em></p>
+<p align="center"><em>Thinking • Speaking</em></p>
+
+<p align="center">
+  <img src="assets/screenshots/control.jpg" width="45%">
+  <img src="assets/screenshots/configuration.jpg" width="45%">
+</p>
+<p align="center"><em>Control • Configuration</em></p>
 
 ---
 
