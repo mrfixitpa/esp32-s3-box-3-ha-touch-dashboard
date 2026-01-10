@@ -1085,11 +1085,11 @@ display:
       - id: idle_page
         lambda: |-
           it.fill(id(idle_color));
-        // Accent lines (low cost)
-        it.line(0, 28, 319, 28, Color(255, 255, 255));     // subtle divider under header
-        it.line(0, 29, 319, 29, Color(160, 220, 255));     // soft highlight
+          // Accent lines (low cost)
+          it.line(0, 28, 319, 28, Color(255, 255, 255));     // subtle divider under header
+          it.line(0, 29, 319, 29, Color(160, 220, 255));     // soft highlight
 
-Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
+          Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_theme_b)) : Color(255,255,255);
           Color on_col = Color(255, 180, 0);          // amber (high contrast)
           Color on_outer = Color(160, 90, 0);
           Color btn_bg = Color(0, 0, 60);           // dark backing for contrast
@@ -1106,9 +1106,9 @@ Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_the
           it.print(8, 4, id(font_mdi), accent, TextAlign::TOP_LEFT, hvac_glyph);
           }
           if (!isnan(id(avg_indoor_temp).state)) {
-            it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
+          it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp %.0f°", id(avg_indoor_temp).state);
           } else {
-            it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
+          it.printf(6, 4, id(font_header_small), accent, TextAlign::TOP_LEFT, "Indoor Temp --°");
           }
           // HVAC icon rendered inline with header text
 
@@ -1116,51 +1116,51 @@ Color accent = id(ui_theme_on) ? Color(id(ui_theme_r), id(ui_theme_g), id(ui_the
           // Center clock + date
           auto t = id(ha_time).now();
           if (t.is_valid()) {
-            bool colon_on = (t.second % 2) == 0;
-            int hour12 = t.hour % 12;
-            if (hour12 == 0) hour12 = 12;
-            int y_clock = 22;
-            int x_center = 160 + (int) id(clock_offset_x).state;
-            if (id(use_24h)) {
-              it.printf(x_center - 10, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%02d", t.hour);
-              it.printf(x_center, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
-              it.printf(x_center + 10, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
-            } else {
-              it.printf(x_center - 10, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%d", hour12);
-              it.printf(x_center, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
-              it.printf(x_center + 10, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
-              if (id(show_ampm)) {
-                const char* ampm = (t.hour >= 12) ? "PM" : "AM";
-                int ampm_x = 70 + (int) id(ampm_offset_x).state;
-                int ampm_y = 67 + (int) id(ampm_offset_y).state;
-                it.printf(ampm_x, ampm_y, id(font_ampm), accent, TextAlign::TOP_RIGHT, "%s", ampm);
-              }
-            }
-            it.strftime(160, 122, id(font_bottom), accent, TextAlign::TOP_CENTER, "%a, %b %d", t);
+          bool colon_on = (t.second % 2) == 0;
+          int hour12 = t.hour % 12;
+          if (hour12 == 0) hour12 = 12;
+          int y_clock = 22;
+          int x_center = 160 + (int) id(clock_offset_x).state;
+          if (id(use_24h)) {
+          it.printf(x_center - 10, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%02d", t.hour);
+          it.printf(x_center, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
+          it.printf(x_center + 10, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
           } else {
-            it.printf(160, 80, id(font_bottom), accent, TextAlign::CENTER, "--:--");
+          it.printf(x_center - 10, y_clock, id(font_clock), accent, TextAlign::TOP_RIGHT, "%d", hour12);
+          it.printf(x_center, y_clock, id(font_clock), (colon_on ? accent : id(idle_color)), TextAlign::TOP_CENTER, ":");
+          it.printf(x_center + 10, y_clock, id(font_clock), accent, TextAlign::TOP_LEFT, "%02d", t.minute);
+          if (id(show_ampm)) {
+          const char* ampm = (t.hour >= 12) ? "PM" : "AM";
+          int ampm_x = 70 + (int) id(ampm_offset_x).state;
+          int ampm_y = 67 + (int) id(ampm_offset_y).state;
+          it.printf(ampm_x, ampm_y, id(font_ampm), accent, TextAlign::TOP_RIGHT, "%s", ampm);
+          }
+          }
+          it.strftime(160, 122, id(font_bottom), accent, TextAlign::TOP_CENTER, "%a, %b %d", t);
+          } else {
+          it.printf(160, 80, id(font_bottom), accent, TextAlign::CENTER, "--:--");
           }
 
           // Bottom HA touch buttons
           const int y_btn = 190;
           const int r = 32;
           auto draw_btn = [&](int x, bool is_on, const char* glyph) {
-            // Always draw a dark backing so buttons stay readable on any background.
-            it.filled_circle(x, y_btn, r, btn_bg);
+          // Always draw a dark backing so buttons stay readable on any background.
+          it.filled_circle(x, y_btn, r, btn_bg);
 
-            if (is_on) {
-              // Pop: thicker amber glow + amber icon
-              it.circle(x, y_btn, r + 8, on_outer);
-              it.circle(x, y_btn, r + 6, on_outer);
-              it.circle(x, y_btn, r + 4, on_col);
-              it.circle(x, y_btn, r + 2, on_col);
-              it.circle(x, y_btn, r, on_col);
-              it.print(x, y_btn - 13, id(font_mdi), on_col, TextAlign::TOP_CENTER, glyph);
-            } else {
-              // Off: match clock color (accent)
-              it.circle(x, y_btn, r, accent);
-              it.print(x, y_btn - 13, id(font_mdi), accent, TextAlign::TOP_CENTER, glyph);
-            }
+          if (is_on) {
+          // Pop: thicker amber glow + amber icon
+          it.circle(x, y_btn, r + 8, on_outer);
+          it.circle(x, y_btn, r + 6, on_outer);
+          it.circle(x, y_btn, r + 4, on_col);
+          it.circle(x, y_btn, r + 2, on_col);
+          it.circle(x, y_btn, r, on_col);
+          it.print(x, y_btn - 13, id(font_mdi), on_col, TextAlign::TOP_CENTER, glyph);
+          } else {
+          // Off: match clock color (accent)
+          it.circle(x, y_btn, r, accent);
+          it.print(x, y_btn - 13, id(font_mdi), accent, TextAlign::TOP_CENTER, glyph);
+          }
           };
           draw_btn(60,  id(lr_lights_on).state,     "\U000F156D");  // sofa-outline
           draw_btn(160, id(dr_light_on).state,     "\U000F1061");  // table-chair
