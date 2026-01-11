@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: "0.3.7"
+    version: "0.3.8"
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -368,6 +368,8 @@ micro_wake_word:
               media_file: wake_sound
               announcement: true
           - delay: 300ms
+          - display.page.show: listening_page
+          - component.update: s3_box_lcd
           - wait_until:
               condition:
                 and:
