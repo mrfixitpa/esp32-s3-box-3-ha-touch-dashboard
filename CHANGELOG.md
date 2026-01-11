@@ -1,5 +1,16 @@
 # Changelog — Touch Dashboard
 
+## v0.3.0
+- Added **on-device wake acknowledgement sound**
+  - Plays immediately after wake word detection
+  - Plays only when the device is idle
+  - Plays before the voice assistant pipeline opens
+- Added fully on-device **timer finished sound**
+  - Standardized to FLAC (48 kHz mono)
+  - Volume increased by +2 dB for improved audibility
+- Standardized all earcon audio to on-device FLAC pipeline
+- Improved perceived responsiveness and audio reliability
+-
 ## v0.2.0
 - Added structured header layout (Indoor / HVAC / Outdoor)
 - Added outdoor temperature support
