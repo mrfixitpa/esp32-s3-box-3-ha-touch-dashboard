@@ -1,5 +1,10 @@
 # Changelog — Touch Dashboard
 
+## v0.3.8
+- Improved UX: Listening page now flips immediately after the wake earcon (no perceived “black”/delay)
+- Maintains PE-aligned wake flow (wake sound fully completes before mic/pipeline start) for I2S stability
+- No changes to audio assets or Home Assistant configuration
+
 ## v0.3.7
 - Fixed ESPHome schema error in wake-word condition (`voice_assistant.is_running` now uses proper `id:` mapping)
 - Kept PE-aligned wake flow: wake earcon plays first, then voice pipeline starts
