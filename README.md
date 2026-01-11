@@ -3,7 +3,7 @@
 This repository contains a **custom ESPHome package** for the **ESP32-S3-Box-3**, providing a **stable, wall-friendly touch dashboard** integrated with Home Assistant.
 
 > ✅ **Current Stable Release:**  
-> **v0.3.0**
+> **v0.3.8**
 
 This project is **separate from the Voice Assistant display repository** and follows its own **v0.x.x** versioning.
 
@@ -11,10 +11,11 @@ This project is **separate from the Voice Assistant display repository** and fol
 
 ## ✨ Features
 
-### 🔊 On‑Device Audio Earcons (v0.3.0)
+### 🔊 On‑Device Audio Earcons (v0.3.8)
 - Added **on-device wake acknowledgement sound** played immediately after wake word detection
 - Wake sound plays **only when idle** (no sound if already speaking)
 - Wake sound plays **before** the voice assistant pipeline starts
+- Listening screen flips immediately after wake sound for responsive UX
 - Added fully on-device **timer finished** sound (+2 dB for audibility)
 - All earcons standardized on **FLAC (48 kHz, mono)** for maximum reliability
 - No Home Assistant service calls required for wake or timer audio
@@ -165,10 +166,14 @@ https://github.com/mrfixitpa/HA-Code-and-Templates/blob/main/ESP32-S3-Box3-Scree
 ```yaml
 packages:
   box3_touchdash:
-    url: github://mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/box3-ha-touchdash.yaml@v0.3.0
+    url: github://mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/box3-ha-touchdash.yaml@v0.3.8
 ```
 
 ---
 
 ## 📄 License
 Provided as-is for personal and educational use.
+
+
+## Credits
+- Wake word acknowledgement sound and timer finished sound are borrowed from the official [Home Assistant Voice PE](https://github.com/esphome/home-assistant-voice-pe) project.
