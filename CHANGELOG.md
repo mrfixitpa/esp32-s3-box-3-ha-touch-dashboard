@@ -1,5 +1,11 @@
 # Changelog — Touch Dashboard
 
+## v0.3.3
+- Simplified wake-word handling to comply strictly with ESPHome schema
+- Resolved YAML parsing errors when using commit hashes or version tags
+- Reworked wake sound conditions to avoid invalid nested condition blocks
+- Improved overall reliability of wake-word → listen transition
+- 
 ## v0.3.2
 - Reworked wake-word audio sequencing to fully eliminate I2S microphone startup race conditions
 - Ensured wake sound playback never overlaps microphone initialization
