@@ -1,5 +1,14 @@
 # Changelog — Touch Dashboard
 
+## v0.3.6
+- Matched Home Assistant Voice PE wake flow: play wake earcon **before** starting the voice pipeline
+- Added hard waits to ensure the speaker is fully released before microphone/I2S init
+- Prevented I2S contention that caused mic start retries and blank screen pauses
+- Restored “wake sound then listen” behavior while keeping playback idle-only
+
+## v0.3.5
+- Prior attempt to increase speaker release wait timing (superseded)
+
 ## v0.3.4
 - Re-architected wake sound handling to eliminate I2S microphone startup conflicts
 - Wake sound now triggers after microphone successfully enters listening state
