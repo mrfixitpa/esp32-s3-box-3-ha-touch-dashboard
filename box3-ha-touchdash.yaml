@@ -359,14 +359,8 @@ micro_wake_word:
     # Play the wake earcon only when idle (and not muted), then start the pipeline.
     - if:
         condition:
-          and:
-            - not:
-                voice_assistant.is_running: va
-            - not:
-                media_player.is_announcing: speaker_media_player
-            - not:
-                speaker.is_playing: box_speaker
-            - switch.is_off: mute
+      lambda: |-
+        return (!id(va).is_running()) && (!id(speaker_media_player).is_announcing()) && (!id(mute).state);
         then:
           - media_player.speaker.play_on_device_media_file:
               media_file: wake_sound
