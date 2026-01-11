@@ -1,5 +1,12 @@
 # Changelog — Touch Dashboard
 
+## v0.3.1
+- Fixed I2S microphone startup race condition when playing on-device wake sound
+- Eliminated ~1–1.5 second blank screen before listening page appears
+- Added proper audio settle timing between speaker playback and microphone start
+- Prevented `i2s_audio.microphone: Driver failed to start` retry condition
+- Improved perceived responsiveness and wake-to-listen transition stability
+- 
 ## v0.3.0
 - Added **on-device wake acknowledgement sound**
   - Plays immediately after wake word detection
