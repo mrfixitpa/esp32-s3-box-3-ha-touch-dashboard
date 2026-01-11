@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.2.0-pre4
+    version: 0.3.0
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -313,7 +313,9 @@ media_player:
       num_channels: 1  # S3 Box only has one output channel
     files:
       - id: timer_finished_sound
-        file: https://raw.githubusercontent.com/esphome/home-assistant-voice-pe/dev/sounds/timer_finished.flac
+        file: https://raw.githubusercontent.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/main/assets/sounds/timer_finished.flac
+      - id: wake_sound
+        file: https://raw.githubusercontent.com/mrfixitpa/esp32-s3-box-3-ha-touch-dashboard/main/assets/sounds/wake_sound.flac
     on_announcement:
       # Stop the wake word (mWW or VA) if the mic is capturing
       - if:
@@ -354,6 +356,20 @@ micro_wake_word:
     - okay_nabu
     - hey_jarvis
   on_wake_word_detected:
+    - if:
+        condition:
+          and:
+            - not:
+                voice_assistant.is_running:
+            - not:
+                media_player.is_announcing:
+            - not:
+                speaker.is_playing:
+        then:
+          - media_player.speaker.play_on_device_media_file:
+              media_file: wake_sound
+              announcement: true
+          - delay: 120ms
     - voice_assistant.start:
         wake_word: !lambda return wake_word;
 
