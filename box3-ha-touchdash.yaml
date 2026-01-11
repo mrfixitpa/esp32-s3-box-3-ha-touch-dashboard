@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: "0.3.3"
+    version: "0.3.4"
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -356,34 +356,20 @@ micro_wake_word:
     - okay_nabu
     - hey_jarvis
   on_wake_word_detected:
+    # Mark a pending earcon only when idle; play it later once the mic is actually running.
     - if:
         condition:
           and:
             - not:
                 voice_assistant.is_running:
                   id: va
-            - not:
-                media_player.is_announcing:
-                  id: speaker_media_player
             - switch.is_off: mute
         then:
-          - media_player.speaker.play_on_device_media_file:
-              media_file: wake_sound
-              announcement: true
-          - wait_until:
-              condition:
-                not:
-                  - media_player.is_announcing:
-                      id: speaker_media_player
-              timeout: 2s
-          - delay: 200ms
-          - voice_assistant.start:
-              id: va
-              wake_word: !lambda return wake_word;
-        else:
-          - voice_assistant.start:
-              id: va
-              wake_word: !lambda return wake_word;
+          - lambda: |-
+              id(pending_wake_earcon) = true;
+    - voice_assistant.start:
+        id: va
+        wake_word: !lambda return wake_word;
 
 voice_assistant:
   id: va
@@ -394,6 +380,17 @@ voice_assistant:
   auto_gain: 31dBFS
   volume_multiplier: 2.0
   on_listening:
+    - if:
+        condition:
+          lambda: |-
+            return id(pending_wake_earcon);
+        then:
+          - lambda: |-
+              id(pending_wake_earcon) = false;
+          - media_player.speaker.play_on_device_media_file:
+              media_file: wake_sound
+              announcement: true
+          - delay: 150ms
     - lambda: id(voice_assistant_phase) = ${voice_assist_listening_phase_id};
     - text_sensor.template.publish:
         id: text_request
@@ -963,6 +960,10 @@ globals:
   - id: global_is_timer
     type: bool
     restore_value: false
+  - id: pending_wake_earcon
+    type: bool
+    restore_value: false
+    initial_value: "false"
 
 image:
   - file: ${error_illustration_file}
