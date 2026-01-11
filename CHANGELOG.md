@@ -7,26 +7,26 @@
 - Eliminated persistent I2S microphone startup retry
 - Fully resolved wake-to-listen blank screen delay
 - Added deterministic pending-wake-earcon sequencing
--
+
 ## v0.3.3
 - Simplified wake-word handling to comply strictly with ESPHome schema
 - Resolved YAML parsing errors when using commit hashes or version tags
 - Reworked wake sound conditions to avoid invalid nested condition blocks
 - Improved overall reliability of wake-word → listen transition
-- 
+ 
 ## v0.3.2
 - Reworked wake-word audio sequencing to fully eliminate I2S microphone startup race conditions
 - Ensured wake sound playback never overlaps microphone initialization
 - Prevented intermittent blank screen delay during wake-to-listen transition
 - Improved overall wake responsiveness and stability on ESP32-S3 Box-3
-- 
+ 
 ## v0.3.1
 - Fixed I2S microphone startup race condition when playing on-device wake sound
 - Eliminated ~1–1.5 second blank screen before listening page appears
 - Added proper audio settle timing between speaker playback and microphone start
 - Prevented `i2s_audio.microphone: Driver failed to start` retry condition
 - Improved perceived responsiveness and wake-to-listen transition stability
-- 
+ 
 ## v0.3.0
 - Added **on-device wake acknowledgement sound**
   - Plays immediately after wake word detection
@@ -37,7 +37,7 @@
   - Volume increased by +2 dB for improved audibility
 - Standardized all earcon audio to on-device FLAC pipeline
 - Improved perceived responsiveness and audio reliability
--
+
 ## v0.2.0
 - Added structured header layout (Indoor / HVAC / Outdoor)
 - Added outdoor temperature support
@@ -46,20 +46,20 @@
 - Immediate visual feedback for touch buttons
 - Improved image reliability using raw.githubusercontent.com URLs
 - Retained all v0.1.x stability improvements
--
+
 ## v0.2.0-pre1
 - Introduced structured header layout (Indoor / HVAC / Outdoor)
 - Added outdoor temperature support
 - Restored state-based HVAC icon colors (red heat / blue cool)
 - Increased header text size for readability
 - Retained all v0.1.x stability improvements
-- 
+ 
 ## v0.1.6
 - Removed 1s idle redraw loop; refresh now happens on minute ticks and on state changes.
 - Added debounced redraw wrapper (`request_draw`) to prevent redraw storms.
 - Touch polling slowed and taps debounced to reduce repeated trigger spam.
 - Cleaned up 12/24-hour toggle logic so AM/PM is consistent and predictable.
-- 
+  
 ## v0.1.5
 - Performance: idle screen now uses a solid light-blue background instead of redrawing a full-screen PNG
 - Added low-cost accent divider lines under the header (no image blitting)
