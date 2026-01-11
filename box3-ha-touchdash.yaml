@@ -117,7 +117,8 @@ time:
         then:
           - if:
               condition:
-                lambda: |-
+            lambda: |-
+
                   return
                     !id(init_in_progress) &&
                     wifi::global_wifi_component->is_connected() &&
@@ -359,7 +360,8 @@ micro_wake_word:
     # Play the wake earcon only when idle (and not muted), then start the pipeline.
     - if:
         condition:
-      lambda: |-
+            lambda: |-
+
         return (!id(va).is_running()) && (!id(speaker_media_player).is_announcing()) && (!id(mute).state);
         then:
           - media_player.speaker.play_on_device_media_file:
