@@ -1,5 +1,13 @@
 # Changelog — Touch Dashboard
 
+## v0.3.4
+- Re-architected wake sound handling to eliminate I2S microphone startup conflicts
+- Wake sound now triggers after microphone successfully enters listening state
+- Removed all audio logic from micro_wake_word.on_wake_word_detected
+- Eliminated persistent I2S microphone startup retry
+- Fully resolved wake-to-listen blank screen delay
+- Added deterministic pending-wake-earcon sequencing
+-
 ## v0.3.3
 - Simplified wake-word handling to comply strictly with ESPHome schema
 - Resolved YAML parsing errors when using commit hashes or version tags
