@@ -1,5 +1,10 @@
 # Changelog — Touch Dashboard
 
+## v0.3.7
+- Fixed ESPHome schema error in wake-word condition (`voice_assistant.is_running` now uses proper `id:` mapping)
+- Kept PE-aligned wake flow: wake earcon plays first, then voice pipeline starts
+- Improves config validation consistency across ESPHome versions
+
 ## v0.3.6
 - Matched Home Assistant Voice PE wake flow: play wake earcon **before** starting the voice pipeline
 - Added hard waits to ensure the speaker is fully released before microphone/I2S init
