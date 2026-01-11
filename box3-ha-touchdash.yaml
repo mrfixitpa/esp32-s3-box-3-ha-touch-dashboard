@@ -372,9 +372,10 @@ micro_wake_word:
               announcement: true
           # Block until the announcement finishes (prevents I2S mic start retry + blank screen)
           - wait_until:
-              not:
-                - media_player.is_announcing: speaker_media_player
-              timeout: 1.0s
+    condition:
+      not:
+        - media_player.is_announcing: speaker_media_player
+    timeout: 1.0s
           - delay: 120ms
           - voice_assistant.start:
               wake_word: !lambda return wake_word;
