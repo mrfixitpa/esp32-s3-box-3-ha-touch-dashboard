@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: 0.3.2
+    version: "0.3.3"
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -117,8 +117,7 @@ time:
         then:
           - if:
               condition:
-            lambda: |-
-
+                lambda: |-
                   return
                     !id(init_in_progress) &&
                     wifi::global_wifi_component->is_connected() &&
@@ -357,12 +356,16 @@ micro_wake_word:
     - okay_nabu
     - hey_jarvis
   on_wake_word_detected:
-    # Play the wake earcon only when idle (and not muted), then start the pipeline.
     - if:
         condition:
-            lambda: |-
-
-        return (!id(va).is_running()) && (!id(speaker_media_player).is_announcing()) && (!id(mute).state);
+          and:
+            - not:
+                voice_assistant.is_running:
+                  id: va
+            - not:
+                media_player.is_announcing:
+                  id: speaker_media_player
+            - switch.is_off: mute
         then:
           - media_player.speaker.play_on_device_media_file:
               media_file: wake_sound
@@ -370,11 +373,17 @@ micro_wake_word:
           - wait_until:
               condition:
                 not:
-                  - media_player.is_announcing: speaker_media_player
-              timeout: 1s
-          - delay: 150ms
-    - voice_assistant.start:
-        wake_word: !lambda return wake_word;
+                  - media_player.is_announcing:
+                      id: speaker_media_player
+              timeout: 2s
+          - delay: 200ms
+          - voice_assistant.start:
+              id: va
+              wake_word: !lambda return wake_word;
+        else:
+          - voice_assistant.start:
+              id: va
+              wake_word: !lambda return wake_word;
 
 voice_assistant:
   id: va
