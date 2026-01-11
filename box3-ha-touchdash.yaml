@@ -356,35 +356,32 @@ micro_wake_word:
     - okay_nabu
     - hey_jarvis
   on_wake_word_detected:
-    # Play wake sound ONLY when idle, then start VA after speaker is fully released.
     - if:
         condition:
           and:
-            - switch.is_off: mute
             - not:
-                voice_assistant.is_running: va
+                voice_assistant.is_running:
+                  id: va
+            - switch.is_off: mute
         then:
           - media_player.speaker.play_on_device_media_file:
               media_file: wake_sound
               announcement: true
-          # Wait until the announcement pipeline is finished AND the speaker has stopped.
+          - delay: 300ms
           - wait_until:
               condition:
-                lambda: |-
-                  return !id(speaker_media_player).is_announcing();
+                and:
+                  - not:
+                      media_player.is_announcing:
+                        id: speaker_media_player
+                  - not:
+                      speaker.is_playing:
+                        id: box_speaker
               timeout: 2s
-          - wait_until:
-              condition:
-                lambda: |-
-                  return !id(box_speaker).is_playing();
-              timeout: 2s
-          - delay: 150ms
-    - display.page.show: listening_page
-    - component.update: s3_box_lcd
-    - delay: 50ms
     - voice_assistant.start:
         id: va
         wake_word: !lambda return wake_word;
+
 voice_assistant:
   id: va
   microphone: box_mic
