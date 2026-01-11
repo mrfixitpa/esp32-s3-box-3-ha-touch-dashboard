@@ -1,5 +1,11 @@
 # Changelog — Touch Dashboard
 
+## v0.3.2
+- Reworked wake-word audio sequencing to fully eliminate I2S microphone startup race conditions
+- Ensured wake sound playback never overlaps microphone initialization
+- Prevented intermittent blank screen delay during wake-to-listen transition
+- Improved overall wake responsiveness and stability on ESP32-S3 Box-3
+- 
 ## v0.3.1
 - Fixed I2S microphone startup race condition when playing on-device wake sound
 - Eliminated ~1–1.5 second blank screen before listening page appears
