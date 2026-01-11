@@ -42,7 +42,7 @@ esphome:
   friendly_name: ESP32 S3 HA Touch Dash
   project:
     name: mrfixitpa.esp32_s3_box_3_ha_touch_dashboard
-    version: "0.3.1"
+    version: 0.3.2
   min_version: 2025.5.0
   name_add_mac_suffix: true
   on_boot:
@@ -356,14 +356,17 @@ micro_wake_word:
     - okay_nabu
     - hey_jarvis
   on_wake_word_detected:
-    # Wake earcon: play only when idle, and block mic/pipeline start until it finishes.
+    # Play the wake earcon only when idle (and not muted), then start the pipeline.
     - if:
         condition:
           and:
             - not:
-                voice_assistant.is_running: {}
+                voice_assistant.is_running: va
             - not:
                 media_player.is_announcing: speaker_media_player
+            - not:
+                speaker.is_playing: box_speaker
+            - switch.is_off: mute
         then:
           - media_player.speaker.play_on_device_media_file:
               media_file: wake_sound
@@ -374,11 +377,8 @@ micro_wake_word:
                   - media_player.is_announcing: speaker_media_player
               timeout: 1s
           - delay: 150ms
-          - voice_assistant.start:
-              wake_word: !lambda return wake_word;
-        else:
-          - voice_assistant.start:
-              wake_word: !lambda return wake_word;
+    - voice_assistant.start:
+        wake_word: !lambda return wake_word;
 
 voice_assistant:
   id: va
