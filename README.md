@@ -177,3 +177,4 @@ Provided as-is for personal and educational use.
 
 ## Credits
 - Wake word acknowledgement sound and timer finished sound are borrowed from the official [Home Assistant Voice PE](https://github.com/esphome/home-assistant-voice-pe) project.
+- Coding debugging assistance, and workflow guidance provided with help from OpenAI ChatGPT.
