@@ -1,5 +1,9 @@
 # Changelog — Touch Dashboard
 
+## v0.3.9
+- Created new AI- Robot Illustrations
+- Updated yaml download links for new illustrations.
+
 ## v0.3.8
 - Improved UX: Listening page now flips immediately after the wake earcon (no perceived “black”/delay)
 - Maintains PE-aligned wake flow (wake sound fully completes before mic/pipeline start) for I2S stability
